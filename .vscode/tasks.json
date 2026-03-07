@@ -10,7 +10,8 @@
         }
     ]
 }*/
-{
+
+/*{
   "version": "2.0.0",
   "tasks": [
     {
@@ -28,6 +29,98 @@
       "type": "shell",
       "command": "nasm -f elf64 ${file} -o ${fileBasenameNoExtension}.o && gcc -no-pie -o ${fileBasenameNoExtension}.exe ${fileBasenameNoExtension}.o",
       "group": "build"
+    }
+  ]
+}*/
+
+/*{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build & Run ASM (gcc)",
+      "type": "shell",
+      "command": "nasm -f elf64 \"${file}\" -o \"${fileDirname}/${fileBasenameNoExtension}.o\" && gcc -no-pie -o \"${fileDirname}/${fileBasenameNoExtension}.exe\" \"${fileDirname}/${fileBasenameNoExtension}.o\"",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      // Optional: auto-run after successful build
+      "dependsOn": [],
+      "postTask": "Run ASM Program"
+    },
+    {
+      "label": "Run ASM Program",
+      "type": "shell",
+      "command": "\"${fileDirname}/${fileBasenameNoExtension}.exe\"",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}*/
+
+/*{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build & Run ASM (ld)",
+      "type": "shell",
+      "command": "nasm -f elf64 \"${file}\" -o \"${fileDirname}/${fileBasenameNoExtension}.o\" && ld -o \"${fileDirname}/${fileBasenameNoExtension}.exe\" \"${fileDirname}/${fileBasenameNoExtension}.o\"",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "postTask": "Run ASM Program"   // remove this line if you don't want auto-run
+    },
+    {
+      "label": "Run ASM Program",
+      "type": "shell",
+      "command": "\"${fileDirname}/${fileBasenameNoExtension}.exe\"",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}*/
+
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build & Run ASM (ld)",
+      "type": "shell",
+      "command": "nasm -f elf64 \"${file}\" -o \"${fileDirname}/${fileBasenameNoExtension}.o\" && ld -o \"${fileDirname}/${fileBasenameNoExtension}.exe\" \"${fileDirname}/${fileBasenameNoExtension}.o\" && \"${fileDirname}/${fileBasenameNoExtension}.exe\"",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
     }
   ]
 }

@@ -1,3 +1,5 @@
+BITS    64
+
 ;; Definition of the `data` section
 section .data
         ;; String variable with the value `hello world!`
@@ -27,4 +29,3 @@ _start:
         mov rdi, 0
         ;; Call the `sys_exit` system call.
         syscall
-        
