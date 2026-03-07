@@ -1,0 +1,35 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug ASM with GDB",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${fileDirname}/${fileBasenameNoExtension}.exe",
+      "args": [],
+      "stopAtEntry": true,                // stops right at _start (very useful!)
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,           // use integrated terminal
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",   // or just "gdb" if in PATH
+      "setupCommands": [
+        {
+          "description": "Enable pretty printing",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "text": "set disassembly-flavor intel"   // Intel syntax (like NASM) instead of AT&T
+        },
+        {
+          "text": "set architecture i386:x86-64"   // ensure 64-bit mode
+        }
+      ],
+      "preLaunchTask": "Build ASM (with debug)",  // auto-build before debug (recommended)
+      "sourceFileMap": {
+        "/path/if/any/in/build": "${workspaceFolder}"
+      }
+    }
+  ]
+}

@@ -103,6 +103,12 @@
   ]
 }*/
 
+
+
+
+
+// Build & Run
+/*
 {
   "version": "2.0.0",
   "tasks": [
@@ -121,6 +127,27 @@
         "focus": false,
         "panel": "shared"
       }
+    }
+  ]
+}
+*/
+
+
+
+
+
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build ASM (with debug)",
+      "type": "shell",
+      "command": "nasm -g -F dwarf -f elf64 \"${file}\" -o \"${fileDirname}/${fileBasenameNoExtension}.o\" && ld -o \"${fileDirname}/${fileBasenameNoExtension}.exe\" \"${fileDirname}/${fileBasenameNoExtension}.o\"",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"]
     }
   ]
 }
