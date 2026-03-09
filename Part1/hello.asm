@@ -1,5 +1,3 @@
-BITS    64
-
 ;; Definition of the `data` section
 section .data
         ;; String variable with the value `hello world!`

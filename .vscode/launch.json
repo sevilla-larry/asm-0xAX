@@ -24,6 +24,9 @@
         },
         {
           "text": "set architecture i386:x86-64"   // ensure 64-bit mode
+        },
+        {
+          "text": "set inferior-tty /dev/null"   // ← this suppresses the controlling terminal attempt
         }
       ],
       "preLaunchTask": "Build ASM (with debug)",  // auto-build before debug (recommended)
