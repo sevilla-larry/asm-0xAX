@@ -80,6 +80,7 @@ argcError:
 str_to_int:
         ;; Set the value of the rax register to 0. It will store the result.
         xor rax, rax
+        xor rbx, rbx
         ;; Base for multiplication
         mov rcx, 10
 __repeat:

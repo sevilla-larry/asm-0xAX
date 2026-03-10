@@ -6,6 +6,7 @@
 *.ko
 *.obj
 *.elf
+*.lst
 
 # Ini files
 *.ini
