@@ -41,6 +41,7 @@ _start:
         pop rsi
         ;; Convert the first command-line argument to an integer number.
         call str_to_int
+str_to_int_result_1:
         ;; Store the result in the r10 register.
         mov r10, rax
 
@@ -48,6 +49,7 @@ _start:
         pop rsi
         ;; Convert the second command-line argument to an integer number.
         call str_to_int
+str_to_int_result_2:
         ;; Store the result in the r11 register.
         mov r11, rax
 
