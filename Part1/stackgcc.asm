@@ -1,3 +1,6 @@
+;; tried using SASM, but failed
+;; parameter seems different using gcc as linker
+
 ;; Definition of the .data section
 section .data
         ;; Number of the `sys_write` system call
@@ -19,10 +22,13 @@ section .data
 ;; Definition of the .text section
 section .text
         ;; Reference to the entry point of our program
-        global _start
+;        global _start
+        global main
 
 ;; Entry point
-_start:
+;_start:
+main:
+        mov     rbp, rsp
         ;; Fetch the number of arguments from the stack and store it in the rcx register.
         pop rcx
         ;; Check the number of the given command-line arguments.
@@ -161,3 +167,4 @@ exit:
         mov rdi, EXIT_CODE
         ;; Call the `sys_exit` system call.
         syscall
+;        ret
