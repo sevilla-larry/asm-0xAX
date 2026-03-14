@@ -15,6 +15,11 @@ section .data
         ;; Length of the WRONG_ARGC_MSG message
         WRONG_ARGC_MSG_LEN equ 42
 
+;; Define the .bss section for uninitialized data
+section .bss
+        ;; Buffer to store the result string (max 20 digits for 64-bit number)
+        result_buffer resb 20
+
 ;; Definition of the .text section
 section .text
         ;; Reference to the entry point of our program
@@ -36,6 +41,7 @@ _start:
         pop rsi
         ;; Convert the first command-line argument to an integer number.
         call str_to_int
+str_to_int_result_1:
         ;; Store the result in the r10 register.
         mov r10, rax
 
@@ -43,11 +49,13 @@ _start:
         pop rsi
         ;; Convert the second command-line argument to an integer number.
         call str_to_int
+str_to_int_result_2:
         ;; Store the result in the r11 register.
         mov r11, rax
 
         ;; Calculate the sum of the arguments. The result will be stored in the r10 register.
         add r10, r11
+
         ;; Move the sum value to the rax register.
         mov rax, r10
         ;; Initialize counter by resetting it to 0. It will store the length of the result string.
@@ -74,6 +82,7 @@ argcError:
 str_to_int:
         ;; Set the value of the rax register to 0. It will store the result.
         xor rax, rax
+        xor rbx, rbx
         ;; Base for multiplication
         mov rcx, 10
 __repeat:
@@ -104,12 +113,12 @@ int_to_str:
         mov rdx, 0
         ;; Set the divisor to 10.
         mov rbx, 10
-        ;; Divide the sum stored in `rax`, resulting quotient will be stored in `rax`,
-        ;; and the reminder will be stored in `rdx` register.
+        ;; Divide the sum stored in `rax. The resulting quotient will be stored in `rax`,
+        ;; and the remainder will be stored in the `rdx` register.
         div rbx
-        ;; Add 48 to the reminder to get a string ASCII representation of the number value.
+        ;; Add 48 to the remainder to get a string ASCII representation of the number value.
         add rdx, 48
-        ;; Store the reminder on the stack.
+        ;; Store the remainder on the stack.
         push rdx
         ;; Increase the counter.
         inc rcx
@@ -117,27 +126,39 @@ int_to_str:
         cmp rax, 0x0
         ;; If it is not zero, continue to convert it to string.
         jne int_to_str
-        ;; Otherwise, print the result.
+        ;; Otherwise, prepare to print the result by copying from stack to buffer
+        jmp copyToBuffer
+
+;; Copy digits from stack to buffer in correct order
+copyToBuffer:
+        ;; rdi will point to our buffer
+        lea rdi, [result_buffer]
+        ;; rcx contains the number of digits
+        mov r12, rcx
+__copy_loop:
+        ;; Pop a digit from the stack
+        pop rax
+        ;; Store only the low byte (the ASCII character) in the buffer
+        mov [rdi], al
+        ;; Move to the next position in the buffer
+        inc rdi
+        ;; Decrease the counter
+        dec r12
+        ;; Continue until all digits are copied
+        jnz __copy_loop
+        ;; Now print the result
         jmp printResult
 
 ;; Print the result to the standard output.
 printResult:
-        ;; Put the number of string characters to the rax register.
-        mov rax, rcx
-        ;; Put the value 8 to the rcx register.
-        mov rcx, 8
-        ;; Calculate the number of bytes in the given string by multiplying rax by 8.
-        ;; The result will be stored in the rax register.
-        mul rcx
-
-        ;; Set the third argument to the length of the result string to print.
-        mov rdx, rax
         ;; Specify the system call number (1 is `sys_write`).
         mov rax, SYS_WRITE
         ;; Set the first argument of `sys_write` to 1 (`stdout`).
         mov rdi, STD_OUT
-        ;; Set the second argument of `sys_write` to the reference of the result string to print.
-        mov rsi, rsp
+        ;; Set the second argument of `sys_write` to the reference of the result buffer.
+        lea rsi, [result_buffer]
+        ;; Set the third argument to the length (number of digits in rcx).
+        mov rdx, rcx
         ;; Call the `sys_write` system call.
         syscall
 
@@ -159,3 +180,4 @@ exit:
         mov rdi, EXIT_CODE
         ;; Call the `sys_exit` system call.
         syscall
+        
